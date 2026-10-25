@@ -1,0 +1,8 @@
+{
+  "source": "fixture",
+  "vehicle": {"make": "Example", "model": "Four Cylinder", "year": 2018},
+  "dtcs": [{"code": "P0301"}],
+  "live_pids": {"rpm": 780, "coolant_temp": 92, "stft": 8, "ltft": 4, "voltage": 14.1},
+  "symptoms": ["rough idle", "flashing check engine light"],
+  "expected": {"cause_contains": "Ignition"}
+}

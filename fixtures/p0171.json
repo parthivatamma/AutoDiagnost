@@ -1,0 +1,1 @@
+{"source":"fixture","dtcs":[{"code":"P0171"}],"live_pids":{"rpm":800,"stft":18,"ltft":22,"maf":3.1},"symptoms":["hesitation"],"expected":{"cause_contains":"Unmetered air"}}

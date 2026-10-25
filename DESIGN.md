@@ -1,7 +1,7 @@
 # AutoDiagnost: Engine Diagnostic Assistant
 
 Status: Final MVP design
-Author: rtamma
+Author: ptamma
 Date: 2026-09-16
 
 ## 1. Product Goal

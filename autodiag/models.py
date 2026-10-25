@@ -75,6 +75,7 @@ class VehicleSnapshot(BaseModel):
     readiness: Readiness | None = None
     symptoms: list[str] = Field(default_factory=list)
     technician_notes: str | None = None
+    expected: dict[str, Any] | None = None
 
     @field_validator("symptoms")
     @classmethod
@@ -96,3 +97,54 @@ class VehicleSnapshot(BaseModel):
 
     def to_json_dict(self) -> dict[str, Any]:
         return self.model_dump(mode="json")
+
+    @classmethod
+    def from_json_file(cls, path: str) -> "VehicleSnapshot":
+        from pathlib import Path
+
+        return cls.model_validate_json(Path(path).read_text())
+
+    def write_json(self, path: str) -> None:
+        from pathlib import Path
+
+        target = Path(path)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(self.model_dump_json(indent=2) + "\n")
+
+
+class Severity(str, Enum):
+    DRIVE_NORMALLY = "drive_normally"
+    DRIVE_WITH_CAUTION = "drive_with_caution"
+    LIMIT_DRIVING = "limit_driving"
+    DO_NOT_DRIVE = "do_not_drive"
+
+
+class Evidence(BaseModel):
+    kind: str
+    detail: str
+    source: str = "snapshot"
+
+
+class Cause(BaseModel):
+    rank: int
+    title: str
+    probability: float = Field(ge=0, le=1)
+    reasoning: str
+    evidence: list[Evidence] = Field(default_factory=list)
+
+
+class NextTest(BaseModel):
+    order: int
+    name: str
+    expected_if_faulty: str
+    expected_if_ok: str
+
+
+class Diagnosis(BaseModel):
+    summary: str
+    severity: Severity
+    causes: list[Cause] = Field(default_factory=list)
+    next_tests: list[NextTest] = Field(default_factory=list)
+    missing_information: list[str] = Field(default_factory=list)
+    safety_notes: list[str] = Field(default_factory=list)
+    citations: dict[str, str] = Field(default_factory=dict)
